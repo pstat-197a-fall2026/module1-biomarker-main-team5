@@ -11,58 +11,26 @@
 #use a fuzzy intersection instead of a hard intersection to combine the sets of top predictive proteins across selection methods
 
 library(tidyverse)
+library(infer)
+library(randomForest)
 library(tidymodels)
+library(modelr)
+library(yardstick)
+load('data/biomarker-clean.RData')
+
 
 set.seed(123)
 
+## Splitting Train/Testing Datsasets
 
-# get names
-var_names <- read_csv('data/biomarker-raw.csv', 
-                      col_names = F, 
-                      n_max = 2, 
-                      col_select = -(1:2)) %>%
-  t() %>%
-  as_tibble() %>%
-  rename(name = V1, 
-         abbreviation = V2) %>%
-  na.omit()
-
-## read biomarker_raw to make split
-biomarker_raw <- read_csv('data/biomarker-raw.csv', 
-                            skip = 2,
-                            col_select = -2L,
-                            col_names = c('group', 
-                                          'empty',
-                                          pull(var_names, abbreviation),
-                                          'ados'),
-                            na = c('-', '')) %>%
-  filter(!is.na(group))
-
-data_split <- initial_split(biomarker_raw, prop = 0.80, strata = group)
+data_split <- initial_split(biomarker_clean, prop = 0.80, strata = group)
 train_data <- training(data_split)
 test_data  <- testing(data_split)
 
-# function for trimming outliers (good idea??)
-trim <- function(x, .at){
-  x[abs(x) > .at] <- sign(x[abs(x) > .at])*.at
-  return(x)
-}
+## MULTIPLE TESTING
+####################
 
-biomarker_train <- train_data %>% mutate(across(.cols = -c(group, ados), 
-                                               ~ trim(scale(log10(.x))[, 1], .at = 3))) %>%
-  # reorder columns
-  select(group, ados, everything())
-
-
-train_nested <- biomarker_train %>%
-  mutate(group = as.factor(group)) %>% # making sure the group is a factor
-  select(-ados)%>% # removing ados
-  pivot_longer(-group, 
-               names_to = 'protein', 
-               values_to = 'level') %>%
-  nest(data = c(level, group))
-
-
+# function to compute tests
 test_fn <- function(.df){
   t_test(.df, 
          formula = level ~ group,
@@ -71,34 +39,92 @@ test_fn <- function(.df){
          var.equal = F)
 }
 
-tt_out <- train_nested %>%
+ttests_out <- train_data %>%
+  # drop ADOS score
+  select(-ados) %>%
+  # arrange in long format
+  pivot_longer(-group, 
+               names_to = 'protein', 
+               values_to = 'level') %>%
+  # nest by protein
+  nest(data = c(level, group)) %>% 
+  # compute t tests
   mutate(ttest = map(data, test_fn)) %>%
   unnest(ttest) %>%
-  arrange(p_value)
+  # sort by p-value
+  arrange(p_value) %>%
+  # multiple testing correction
+  mutate(m = n(),
+         hm = log(m) + 1/(2*m) - digamma(1),
+         rank = row_number(),
+         p.adj = m*hm*p_value/rank)
 
-tt_out %>% head(5)
-
-
-# multiple testing corrections
-m <- nrow(tt_out)
-hm <- log(m) + 1/(2*m) - digamma(1)
-
-tt_corrected <- tt_out %>%
-  select(data, protein, p_value) %>%
-  mutate(rank = row_number()) %>%
-  mutate(p_bh = p_value*m/rank,
-         p_by = p_value*m*hm/rank,
-         p_bonf = p_value*m)
-
-tt_corrected %>% head(5)
+# select significant proteins 
+proteins_s1 <- ttests_out %>%
+  slice_min(p.adj, n = 25) %>% # selecting larger subset (25 proteins)
+  pull(protein)
 
 
 
 
+## RANDOM FOREST
+##################
+
+set.seed(123)
+
+# store predictors and response separately for traning data
+train_predictors <- train_data %>%
+  select(-c(group, ados))
+
+train_response <- train_data %>% pull(group) %>% factor()
+
+rf_out <- randomForest(x = train_predictors, 
+                       y = train_response, 
+                       ntree = 1000, 
+                       importance = T)
+
+# check errors
+rf_out$confusion
+
+# compute importance scores
+proteins_s2 <- rf_out$importance %>% 
+  as_tibble() %>%
+  mutate(protein = rownames(rf_out$importance)) %>%
+  slice_max(MeanDecreaseGini, n = 25) %>% ## change to n=25
+  pull(protein)
+
+## LOGISTIC REGRESSION
+#######################
+set.seed(123)
+# Using Fuzzy Interaction instead of Hard Interaction (either in s1 or s2)
+proteins_fuzzy <- union(proteins_s1, proteins_s2)
+
+train_sstar <- train_data %>%
+  select(group, any_of(proteins_fuzzy)) %>%
+  mutate(class = (group == 'ASD')) %>%
+  select(-group)
+
+# fit logistic regression model to training set
+fit <- glm(class ~ ., 
+           data = train_sstar, 
+           family = 'binomial')
+
+test_sstar <- test_data %>%
+  select(group, any_of(proteins_fuzzy)) %>%
+  mutate(class = as.numeric(group == 'ASD')) %>%
+  select(-group)
+
+# evaluate errors on test set
+class_metrics <- metric_set(sensitivity, 
+                            specificity, 
+                            accuracy,
+                            roc_auc)
+
+test_sstar %>%
+  add_predictions(fit, type = 'response') %>%
+  class_metrics(estimate = factor(pred > 0.5),
+                truth = factor(class), pred,
+                event_level = 'second')
 
 
 
-
-# export as r binary
-#save(list = 'biomarker_clean', 
-#file = 'data/biomarker-clean.RData')
