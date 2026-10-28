@@ -27,7 +27,9 @@ Write a brief one-paragraph abstract that describes the contents of your write-u
 
 ## Dataset
 
-Write a brief data description, including: how data were obtained; sample characteristics; variables measured; and data preprocessing. This can be largely based on the source paper and should not exceed 1-2 paragraphs.
+The dataset used in this analysis comes from Hewitson et al. (2021), which investigated potential blood-based biomarkers for autism spectrum disorder (ASD). The study included serum samples from 154 boys between 18 months and 8 years old, consisting of 76 individuals diagnosed with ASD and 78 typically developing (TD) controls. The mean ages were 5.6 years for the ASD group and 5.7 years for the TD group. Diagnoses for ASD were established using clinical assessments, the Autism Diagnostic Observation Schedule (ADOS) and Autism Diagnostic Interview–Revised (ADI-R), while TD participants went through the Adaptive Behavior Assessment System—Second Edition (ABAS-II) to rule out developmental concerns. The protein measurements were obtained through collecting blood samples and analysis using the SomaLogic SOMAScan 1.3K platform for protein abundance.
+
+The original dataset contained measurements for 1,317 proteins, along with group classification and ADOS scores. In the published study, 192 proteins were excluded after failing quality control, leaving 1,125 proteins for analysis. For the class analysis, all 1,317 proteins were considered but during preprocessing protein measurements were log10-transformed to reduce skewness and standardized to have a mean of zero and standard deviation of one. The original class preprocessing code also capped standardized values outside the range of −3 to 3 to limit the influence of extreme measurements. This trimming step was temporarily removed to investigate the distribution of outliers across subjects and compare their frequency between the ASD and TD groups.
 
 ## Summary of published analysis
 
