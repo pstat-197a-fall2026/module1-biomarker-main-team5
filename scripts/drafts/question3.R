@@ -137,4 +137,10 @@ test_sstar %>%
     event_level = 'second'
   )
 
-
+Intepretation: 
+  
+#The overall test set accuracy decreased from 83.9% to 75.0% and ROC AUC from 0.908 to 0.871. 
+#The main reason performance dropped is that we fixed data leakage. By picking our proteins using 
+#only the training data, the test set stayed completely unseen and provided a truly fair test. 
+#Additionally, expanding the feature threshold to n = 25 and using a fuzzy union substantially enlarged 
+#the candidate predictor pool, increasing model complexity and leading to slight overfitting in the logistic regression.
