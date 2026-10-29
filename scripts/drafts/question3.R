@@ -137,7 +137,7 @@ test_sstar %>%
     event_level = 'second'
   )
 
-Intepretation: 
+#Interpretation: 
   
 #The overall test set accuracy decreased from 83.9% to 75.0% and ROC AUC from 0.908 to 0.871. 
 #The main reason performance dropped is that we fixed data leakage. By picking our proteins using 
