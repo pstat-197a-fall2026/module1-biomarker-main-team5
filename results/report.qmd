@@ -35,7 +35,13 @@ The original dataset contained measurements for 1,317 proteins, along with group
 
 Summarize the methodology of the paper in 1-3 paragraphs. You need not explain the methods in depth as we did in class; just indicate what methods were used and how they were combined. If possible, include a diagram that depicts the methodological design. (Quarto has support for [GraphViz and Mermaid flowcharts](https://quarto.org/docs/authoring/diagrams.html).) Provide key results: the proteins selected for the classifier and the estimated accuracy.
 
-We applied a fairly linear methodology while investigating the proteins that may be possible early detection biomarkers of autism spectrum disorder.
+We applied a fairly branching methodology while investigating the proteins that may be possible early detection biomarkers of autism spectrum disorder. The initial steps for this looked like log transforming and normalizing the dataset, followed by considering three approaches to identifying correlated proteins.
+
+We split the identification into two methods, the first of which was multiple testing. The second approach was via a random forest instead. Lastly we applied a fuzzy logistic regression to identify if we were seeing more viability as a result of considering both methods.
+
+We found that \[ask about question 3 clarification\]. \[Include a flow chart\]
+
+From there, we began to consider \[some simple or alternate based on Q4 route\] panels which may more accurately achieve improved classification accuracy. We were able to do this by \[ask about Q4, potentially also add another flow chart\].
 
 ## Findings
 
