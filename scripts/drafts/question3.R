@@ -65,6 +65,7 @@ ttests_out <- train_data %>%
 proteins_s1 <- ttests_out %>%
   slice_min(p.adj, n = 25) %>% # selecting larger subset (25 proteins)
   pull(protein)
+proteins_s1
 
 
 

@@ -35,6 +35,8 @@ The original dataset contained measurements for 1,317 proteins, along with group
 
 Summarize the methodology of the paper in 1-3 paragraphs. You need not explain the methods in depth as we did in class; just indicate what methods were used and how they were combined. If possible, include a diagram that depicts the methodological design. (Quarto has support for [GraphViz and Mermaid flowcharts](https://quarto.org/docs/authoring/diagrams.html).) Provide key results: the proteins selected for the classifier and the estimated accuracy.
 
+We applied a fairly linear methodology while investigating the proteins that may be possible early detection biomarkers of autism spectrum disorder.
+
 ## Findings
 
 Summarize your findings here. I've included some subheaders in a way that seems natural to me; you can structure this section however you like.
