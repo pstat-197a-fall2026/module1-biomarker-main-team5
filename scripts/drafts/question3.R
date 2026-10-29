@@ -65,6 +65,31 @@ proteins_s1 <- ttests_out %>%
   pull(protein)
 
 
+## Evaluating Accuracy
+
+train_ttest <- train_data %>%
+  select(group, any_of(proteins_s1)) %>%
+  mutate(class = (group == 'ASD')) %>%
+  select(-group)
+
+fit_ttest <- glm(class ~ ., data = train_ttest, family = 'binomial')
+
+test_ttest <- test_data %>% mutate(class = (group == 'ASD')) %>% 
+  select(group, any_of(proteins_s1)) %>%
+  select(-group)
+
+test_ttest %>% add_predictions(fit_ttest, type = 'response') %>%
+  mutate(
+    pred_class = factor(pred > 0.5, levels = c(FALSE, TRUE)),
+    truth_class = factor(class, levels = c(FALSE, TRUE))
+  ) %>%
+  class_metrics(
+    truth = truth_class,
+    estimate = pred_class,
+    pred,
+    event_level = 'second'
+  )
+
 
 
 ## RANDOM FOREST
@@ -92,6 +117,42 @@ proteins_s2 <- rf_out$importance %>%
   mutate(protein = rownames(rf_out$importance)) %>%
   slice_max(MeanDecreaseGini, n = 25) %>% ## change to n=25
   pull(protein)
+proteins_s2
+
+
+## Evaluating Accuracy
+
+test_predictors <- test_data %>%
+  select(all_of(names(train_predictors)))
+
+rf_pred_class <- predict(
+  rf_out,
+  newdata = test_predictors,
+  type = "class"
+)
+
+rf_prob_asd <- predict(
+  rf_out,
+  newdata = test_predictors,
+  type = "prob"
+)[, "ASD"]
+
+rf_results <- test_data %>%
+  mutate(
+    truth_class = factor(group == "ASD", levels = c(FALSE, TRUE)),
+    pred_class = factor(rf_pred_class == "ASD",
+                        levels = c(FALSE, TRUE)),
+    prob_asd = rf_prob_asd
+  )
+
+class_metrics(
+  rf_results,
+  truth = truth_class,
+  estimate = pred_class,
+  prob_asd,
+  event_level = "second"
+)
+
 
 ## LOGISTIC REGRESSION
 #######################
@@ -111,10 +172,10 @@ fit <- glm(class ~ .,
 
 test_sstar <- test_data %>%
   select(group, any_of(proteins_fuzzy)) %>%
-  mutate(class = as.numeric(group == 'ASD')) %>%
+  mutate(class = (group == 'ASD')) %>%
   select(-group)
 
-# evaluate errors on test set
+# Evaluating Accuracy
 class_metrics <- metric_set(sensitivity, 
                             specificity, 
                             accuracy,
@@ -122,9 +183,16 @@ class_metrics <- metric_set(sensitivity,
 
 test_sstar %>%
   add_predictions(fit, type = 'response') %>%
-  class_metrics(estimate = factor(pred > 0.5),
-                truth = factor(class), pred,
-                event_level = 'second')
+  mutate(
+    pred_class = factor(pred > 0.5, levels = c(FALSE, TRUE)),
+    truth_class = factor(class, levels = c(FALSE, TRUE))
+  ) %>%
+  class_metrics(
+    truth = truth_class,
+    estimate = pred_class,
+    pred,
+    event_level = 'second'
+  )
 
 
 
