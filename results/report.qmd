@@ -49,7 +49,11 @@ Summarize your findings here. I've included some subheaders in a way that seems 
 
 ### Impact of preprocessing and outliers
 
-Tasks 1-2
+To understand why protein measurements were log-transformed, we compared histograms of raw and log-transformed protein values. The raw measurements were strongly right-skewed, meaning most values were relatively low, while a few were extremely high. After log transformation, the distribution became more balanced and less affected by extreme values. This helps make the data easier to analyze.
+
+Next, we examined outliers by removing the trimming step from preprocessing. We counted how many protein measurements were more than three standard deviations from the mean for each subject. Some subjects had unusually high numbers of outliers, including subject rows 154 (TD) with 157 outliers, 108 (TD) with 127, and 9 (ASD) with 126. The TD group had a higher average number of outliers (17.6) than the ASD group (13.2), but both groups had the same median of 8.5.
+
+Overall, log transformation helped reduce skewness, while trimming limited extreme values. Although TD subjects had more outliers on average, the similar distributions and identical medians suggest that this difference may be driven by a few subjects with unusually high outlier counts.
 
 ### Methodological variations
 
