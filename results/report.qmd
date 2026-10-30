@@ -41,12 +41,14 @@ We split the identification into two methods, the first of which was multiple te
 
 ```{mermaid}
 flowchart LR
-  A[Multiple Testing] --> C{Decision}
-  B[Random Forest] --> C{Decision}
-  C --> D[Intersection]
-  C --> E[Union]
-  D --> F{Decision}
-  E --> F{Decision}
+  Z[Cleaned Data] --> A
+  Z --> B
+  A[Multiple Testing] --> D[Intersection]
+  A --> E[Union]
+  B[Random Forest] --> D
+  B --> E
+  D --> F{Fuzzy Regression}
+  E --> F{Fuzzy Regression}
   F --> G[Intersection Chosen]
 ```
 

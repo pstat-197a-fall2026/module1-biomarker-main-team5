@@ -102,12 +102,14 @@ ul.task-list li input[type="checkbox"] {
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">flowchart LR
-  A[Multiple Testing] --&gt; C{Decision}
-  B[Random Forest] --&gt; C{Decision}
-  C --&gt; D[Intersection]
-  C --&gt; E[Union]
-  D --&gt; F{Decision}
-  E --&gt; F{Decision}
+  Z[Cleaned Data] --&gt; A
+  Z --&gt; B
+  A[Multiple Testing] --&gt; D[Intersection]
+  A --&gt; E[Union]
+  B[Random Forest] --&gt; D
+  B --&gt; E
+  D --&gt; F{Fuzzy Regression}
+  E --&gt; F{Fuzzy Regression}
   F --&gt; G[Intersection Chosen]
 </pre>
 </div>
