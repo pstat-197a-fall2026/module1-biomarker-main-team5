@@ -39,6 +39,14 @@ We applied a fairly branching methodology while investigating the proteins that 
 
 We split the identification into two methods, the first of which was multiple testing. The second approach was via a random forest instead. Lastly we applied a fuzzy logistic regression to identify if we were seeing more viability as a result of taking the union, or the intersection of the two identified sets of correlated proteins. The intersection was more accurate, with 83.9% rather than the union's 75.0% accuracy and the ROC AUC was 0.908 and 0.871 respectively.
 
+```{mermaid}
+flowchart LR
+  A[Multiple Testing] --> C{Decision}
+  B[Random Forest] --> C{Decision}
+  C --> D[Intersection]
+  C --> E[Union]
+```
+
 From there, we began to consider \[some simple or alternate based on Q4 route\] panels which may more accurately achieve improved classification accuracy. We were able to do this by \[ask about Q4, potentially also add another flow chart\].
 
 ## Findings
