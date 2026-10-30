@@ -64,7 +64,7 @@ Overall, log transformation helped reduce skewness, while trimming limited extre
 
 ### Methodological variations
 
-Task 3
+When comparing the original script and the modifications made for question 3, the overall test set accuracy decreased from 83.9% to 75.0% and ROC AUC from 0.908 to 0.871. In the original script, we selected proteins using multiple testing and Random Forest which was performed on the entire dataset. This introduced data leakage because the test set was used to help select the best proteins before the data was split. In Question 3, we selected the proteins using only the training set, ensuring the test set remained completely unseen for an honest evaluation. Additionally, while the baseline method used n=10 and a strict hard intersection to select a small set of proteins, the modified approach expanded the pool, using n=25 and a fuzzy union. Selecting more candidate proteins across both methods increased the feature dimension, which raised model complexity and led to slight overfitting in the logistic regression.
 
 ### Improved classifier
 
