@@ -45,6 +45,9 @@ flowchart LR
   B[Random Forest] --> C{Decision}
   C --> D[Intersection]
   C --> E[Union]
+  D --> F{Decision}
+  E --> F{Decision}
+  F --> G[Intersection Chosen]
 ```
 
 From there, we began to consider \[some simple or alternate based on Q4 route\] panels which may more accurately achieve improved classification accuracy. We were able to do this by \[ask about Q4, potentially also add another flow chart\].
