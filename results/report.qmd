@@ -52,7 +52,7 @@ flowchart LR
   F --> G[Intersection Chosen]
 ```
 
-From there, we began to consider \[some simple or alternate based on Q4 route\] panels which may more accurately achieve improved classification accuracy. We were able to do this by \[ask about Q4, potentially also add another flow chart\].
+We then explored whether a smaller panel could achieve comparable classification accuracy. With the multiple testing results from Question 3, we selected 5 proteins and fitted a logistic regression model to compare its performance against the larger panel.
 
 ## Findings
 
@@ -72,4 +72,4 @@ Task 3
 
 ### Improved classifier
 
-Task 4
+For question 4 , we wanted to see if a smaller panel of proteins could achieve a comparable classification accuracy. When utilizing the multiple testing results from Q3, we initially selected the top two proteins, FST1 and PTN, however, it resulted in an accuracy of 0.625. Therefore, we consider the top 5 proteins: FSTL1, PTN, DERM, Calcineurin, and MMP-2. Using the logistic regression on the same training/testing split the smaller panel achieved an accuracy of 68.8%, and ROC AUC 0.832, compared to the 75.0% and 0.871 ROC AUC from the larger panel in Q3. The smaller panel had slightly lower accuracy, using fewer proteins maintaining similar classification performance and due to the fact we explored more than one panel size on said same test test, the results can be deemed exploratory. Compared to the in-class analysis we achieved 83.9% accuracy and a ROC AUC of 0.908 and our 5-protein panel had lower classification accuracy. Protein selection timing differed, limiting direct comparisons.
