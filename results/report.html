@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="List names here">
-<meta name="dcterms.date" content="2026-10-29">
+<meta name="author" content="Erika Nares, Kaydon Lee, Pranavi Gandikota, Luke Drushell">
+<meta name="dcterms.date" content="2026-10-30">
 
 <title>Biomarkers of ASD</title>
 <style>
@@ -52,7 +52,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Biomarkers of ASD</h1>
-<p class="subtitle lead">If you want a subtitle put it here</p>
+<p class="subtitle lead">Module 1 - Group 5</p>
 </div>
 
 
@@ -62,14 +62,14 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>List names here </p>
+             <p>Erika Nares, Kaydon Lee, Pranavi Gandikota, Luke Drushell </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 29, 2026</p>
+      <p class="date">October 30, 2026</p>
     </div>
   </div>
   
@@ -84,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
 <p>Use this as a template. Keep the headers and remove all other text. In all, your report can be quite short. When it is complete, render and then push changes to your team repository.</p>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-<p>Write a brief one-paragraph abstract that describes the contents of your write-up.</p>
+<p>In this project, we analyzed blood serum protein measurements from Hewitson et al.&nbsp;(2021) to explore potential biomarkers for autism spectrum disorder (ASD). We examined how preprocessing steps, including log transformation and outlier trimming, affected the data. We also compared different methods for selecting proteins and evaluated their ability to classify ASD and typically developing (TD) subjects. Our results showed that log transformation reduced skewness and that some subjects had unusually high numbers of outlying measurements. The intersection of proteins selected through multiple testing and random forest achieved the highest reported accuracy of 83.9%, while a smaller five-protein logistic regression model achieved 68.8% accuracy. Overall, our findings highlight how preprocessing and protein selection methods can influence classification performance.</p>
 </section>
 <section id="dataset" class="level2">
 <h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
@@ -93,7 +93,6 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="summary-of-published-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-published-analysis">Summary of published analysis</h2>
-<p>Summarize the methodology of the paper in 1-3 paragraphs. You need not explain the methods in depth as we did in class; just indicate what methods were used and how they were combined. If possible, include a diagram that depicts the methodological design. (Quarto has support for <a href="https://quarto.org/docs/authoring/diagrams.html">GraphViz and Mermaid flowcharts</a>.) Provide key results: the proteins selected for the classifier and the estimated accuracy.</p>
 <p>We applied a fairly branching methodology while investigating the proteins that may be possible early detection biomarkers of autism spectrum disorder. The initial steps for this looked like log transforming and normalizing the dataset, followed by considering three approaches to identifying correlated proteins.</p>
 <p>We split the identification into two methods, the first of which was multiple testing. The second approach was via a random forest instead. Lastly we applied a fuzzy logistic regression to identify if we were seeing more viability as a result of taking the union, or the intersection of the two identified sets of correlated proteins. The intersection was more accurate, with 83.9% rather than the union’s 75.0% accuracy and the ROC AUC was 0.908 and 0.871 respectively.</p>
 <div class="cell" data-layout-align="default">
@@ -117,11 +116,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>From there, we began to consider [some simple or alternate based on Q4 route] panels which may more accurately achieve improved classification accuracy. We were able to do this by [ask about Q4, potentially also add another flow chart].</p>
+<p>We then explored whether a smaller panel could achieve comparable classification accuracy. With the multiple testing results from Question 3, we selected 5 proteins and fitted a logistic regression model to compare its performance against the larger panel.</p>
 </section>
 <section id="findings" class="level2">
 <h2 class="anchored" data-anchor-id="findings">Findings</h2>
-<p>Summarize your findings here. I’ve included some subheaders in a way that seems natural to me; you can structure this section however you like.</p>
 <section id="impact-of-preprocessing-and-outliers" class="level3">
 <h3 class="anchored" data-anchor-id="impact-of-preprocessing-and-outliers">Impact of preprocessing and outliers</h3>
 <p>To understand why protein measurements were log-transformed, we compared histograms of raw and log-transformed protein values. The raw measurements were strongly right-skewed, meaning most values were relatively low, while a few were extremely high. After log transformation, the distribution became more balanced and less affected by extreme values. This helps make the data easier to analyze.</p>
@@ -130,11 +128,11 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="methodological-variations" class="level3">
 <h3 class="anchored" data-anchor-id="methodological-variations">Methodological variations</h3>
-<p>Task 3</p>
+<p>When comparing the original script and the modifications made for question 3, the overall test set accuracy decreased from 83.9% to 75.0% and ROC AUC from 0.908 to 0.871. In the original script, we selected proteins using multiple testing and Random Forest which was performed on the entire dataset. This introduced data leakage because the entire dataset was used to select the best proteins before the data was split. In Question 3, we selected the proteins using only the training set, ensuring the test set remained completely unseen for an honest evaluation. Additionally, while the baseline method used n=10 and a strict hard intersection to select a small set of proteins, the modified approach expanded the pool, using n=25 and a fuzzy interaction. Selecting more candidate proteins across both methods increased the feature dimension, which raised model complexity and led to slight overfitting in the logistic regression.</p>
 </section>
 <section id="improved-classifier" class="level3">
 <h3 class="anchored" data-anchor-id="improved-classifier">Improved classifier</h3>
-<p>Task 4</p>
+<p>For question 4 , we wanted to see if a smaller panel of proteins could achieve a comparable classification accuracy. When utilizing the multiple testing results from Q3, we initially selected the top two proteins, FST1 and PTN, however, it resulted in an accuracy of 0.625. Therefore, we consider the top 5 proteins: FSTL1, PTN, DERM, Calcineurin, and MMP-2. Using the logistic regression on the same training/testing split the smaller panel achieved an accuracy of 68.8%, and ROC AUC 0.832, compared to the 75.0% and 0.871 ROC AUC from the larger panel in Q3. The smaller panel had slightly lower accuracy, using fewer proteins maintaining similar classification performance and due to the fact we explored more than one panel size on said same test test, the results can be deemed exploratory. Compared to the in-class analysis we achieved 83.9% accuracy and a ROC AUC of 0.908 and our 5-protein panel had lower classification accuracy. Protein selection timing differed, limiting direct comparisons.</p>
 </section>
 </section>
 
